@@ -100,7 +100,7 @@ def execute(command, display=False):
         raise Exception(output)
 
 
-def execute_db_commnads(command):
+def execute_db_commands(command):
     cmd = """mysql -uroot -p%s -e "%s" """ % (mysql_password, command)
     output = execute(cmd)
     return output
@@ -206,10 +206,10 @@ def _create_keystone_users():
 def install_and_configure_keystone():
     keystone_conf = "/etc/keystone/keystone.conf"
 
-    execute_db_commnads("DROP DATABASE IF EXISTS keystone;")
-    execute_db_commnads("CREATE DATABASE keystone;")
-    execute_db_commnads("GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'keystone';")
-    execute_db_commnads("GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'keystone';")
+    execute_db_commands("DROP DATABASE IF EXISTS keystone;")
+    execute_db_commands("CREATE DATABASE keystone;")
+    execute_db_commands("GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'keystone';")
+    execute_db_commands("GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'keystone';")
 
     execute("apt-get install keystone -y", True)
 
@@ -234,10 +234,10 @@ def install_and_configure_glance():
     glance_api_paste_conf = "/etc/glance/glance-api-paste.ini"
     glance_registry_paste_conf = "/etc/glance/glance-registry-paste.ini"
 
-    execute_db_commnads("DROP DATABASE IF EXISTS glance;")
-    execute_db_commnads("CREATE DATABASE glance;")
-    execute_db_commnads("GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'glance';")
-    execute_db_commnads("GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'glance';")
+    execute_db_commands("DROP DATABASE IF EXISTS glance;")
+    execute_db_commands("CREATE DATABASE glance;")
+    execute_db_commands("GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'glance';")
+    execute_db_commands("GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'glance';")
 
     execute("apt-get install glance -y", True)
 
@@ -282,10 +282,10 @@ def install_and_configure_nova():
     nova_paste_conf = "/etc/nova/api-paste.ini"
     nova_compute_conf = "/etc/nova/nova-compute.conf"
 
-    execute_db_commnads("DROP DATABASE IF EXISTS nova;")
-    execute_db_commnads("CREATE DATABASE nova;")
-    execute_db_commnads("GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'nova';")
-    execute_db_commnads("GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'nova';")
+    execute_db_commands("DROP DATABASE IF EXISTS nova;")
+    execute_db_commands("CREATE DATABASE nova;")
+    execute_db_commands("GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'nova';")
+    execute_db_commands("GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'nova';")
 
     execute("apt-get install kvm libvirt-bin -y")
     execute("apt-get install nova-api nova-cert nova-scheduler nova-conductor nova-compute-kvm novnc nova-consoleauth nova-novncproxy -y", True)
@@ -351,10 +351,10 @@ def install_and_configure_neutron():
     neutron_plugin_conf = "/etc/neutron/plugins/linuxbridge/linuxbridge_conf.ini"
     neutron_dhcp_conf = "/etc/neutron/dhcp_agent.ini"
 
-    execute_db_commnads("DROP DATABASE IF EXISTS neutron;")
-    execute_db_commnads("CREATE DATABASE neutron;")
-    execute_db_commnads("GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'neutron';")
-    execute_db_commnads("GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'neutron';")
+    execute_db_commands("DROP DATABASE IF EXISTS neutron;")
+    execute_db_commands("CREATE DATABASE neutron;")
+    execute_db_commands("GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'neutron';")
+    execute_db_commands("GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'neutron';")
 
     execute("apt-get install neutron-server neutron-plugin-linuxbridge neutron-plugin-linuxbridge-agent neutron-dhcp-agent -y", True)
 
