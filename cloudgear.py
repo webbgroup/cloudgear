@@ -406,6 +406,19 @@ def install_and_configure_dashboard():
     execute("service apache2 restart", True)
     execute("sed -i 's/Member/_member_/g' /etc/openstack-dashboard/local_settings.py")
 
+def configure_simple_network():
+    execute("neutron net-create external -- --router:external=True")
+    execute("neutron subnet-create external --name externalNet --gateway=192.168.1.1 --enable_dhcp=False 192.168.1.0/24")
+    demo_tenant_id = execute("keystone tenant-list | grep ' admin ' | awk '{print $2;}'")
+    execute("neutron router-create rooota --tenant-id %s" % demo_tenant_id )
+    router_id = execute("neutron router-list | grep -i rooota | awk '{print $2;}'")
+    ext_net_id = execute("neutron net-external-list | grep -i external | awk '{print $2;}'")
+    execute("neutron router-gateway-set %s %s" % (router_id, ext_net_id) )
+    execute("neutron net-create internal --tenant-id %s --shared" % demo_tenant_id)
+    execute("neutron subnet-create internal --name internalNet --tenant-id %s 172.16.0.0/24" % demo_tenant_id)
+    int_subnet_id = execute("neutron subnet-list | grep -i internal | awk '{print $2;}'")
+    execute("neutron router-interface-add %s %s" % (router_id, int_subnet_id))
+
 
 initialize_system()
 install_rabbitmq()
@@ -415,8 +428,9 @@ install_and_configure_glance()
 install_and_configure_nova()
 install_and_configure_neutron()
 install_and_configure_dashboard()
+configure_simple_network()
 
-#   make sure the root is setup properly
+#   make sure the api is setup properly for vagrant user
 execute("cat /root/adminrc >> /home/vagrant/.bashrc")
 execute("echo export no_proxy=127.0.0.1 >> /home/vagrant/.bashrc")
 #   download cirrosimage
@@ -429,17 +443,5 @@ execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.
 #execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
 #execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
 
-#   Setup Networking
-execute("neutron net-create external -- --router:external=True")
-execute("neutron subnet-create external --name externalNet --gateway=192.168.1.1 --enable_dhcp=False 192.168.1.0/24")
-demo_tenant_id = execute("keystone tenant-list | grep admin | awk '{print $2;}'")
-execute("neutron router-create rooota --tenant-id $s" % (demo_tenant_id) )
-router_id = execute("neutron router-list | grep -i rooota | awk '{print $2;}'")
-ext_net_id = execute("neutron net-external-list | grep -i external | awk '{print $2;}")
-execute("neutron router-gateway-set $s $s" % (router_id, ext_net_id) )
-execute("neutron net-create internal --tenant-id $s --shared" % demo_tenant_id)
-execute("neutron subnet-create internal --name internalNet --tenant-id $s 172.16.0.0/24" % demo_tenant_id)
-int_subnet_id = execute("neutron subnet-list | grep -i internal | awk '{print $2;}")
-execute("neutron router-interface-add $s $s" % (router_id, int_subnet_id))
 
 print_format(" Installation successfull! Login into horizon you crazy fool http://%s/horizon  Username:admin  Password:secret " % ip_address)
