@@ -421,7 +421,14 @@ execute("cat /root/adminrc >> /home/vagrant/.bashrc")
 execute("echo export no_proxy=127.0.0.1 >> /home/vagrant/.bashrc")
 #   download cirrosimage
 execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
-execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --containter-format bare")
+execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
+# download centos image
+#execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
+#execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
+# download ubuntu image
+#execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
+#execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
+
 #   Setup Networking
 execute("neutron net-create external -- --router:external=True")
 execute("neutron subnet-create external --name externalNet --gateway=192.168.1.1 --enable_dhcp=False 192.168.1.0/24")
