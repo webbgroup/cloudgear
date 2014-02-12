@@ -161,6 +161,12 @@ def _create_keystone_users():
     admin_role = execute("keystone role-create --name admin|grep ' id '|awk '{print $4}'")
     execute("keystone user-role-add --user_id %s --tenant_id %s --role_id %s" % (admin_user, admin_tenant, admin_role))
 
+    #TODO(ish) : This is crude way of doing. Install keystone client and use that to create tenants, role etc
+    sudoadmin_tenant = execute("keystone tenant-create --name sudoadmin --description 'Sudo Admin Tenant' --enabled true |grep ' id '|awk '{print $4}'")
+    sudoadmin_user = execute("keystone user-create --tenant_id %s --name sudoadmin --pass secret --enabled true|grep ' id '|awk '{print $4}'" % admin_tenant)
+    sudoadmin_role = execute("keystone role-create --name sudoadmin|grep ' id '|awk '{print $4}'")
+    execute("keystone user-role-add --user_id %s --tenant_id %s --role_id %s" % (sudoadmin_user, sudoadmin_tenant, sudoadmin_role))
+
 
     service_tenant = execute("keystone tenant-create --name service --description 'Service Tenant' --enabled true |grep ' id '|awk '{print $4}'")
 
