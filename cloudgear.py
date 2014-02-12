@@ -406,7 +406,7 @@ def install_and_configure_dashboard():
     execute("service apache2 restart", True)
     execute("sed -i 's/Member/_member_/g' /etc/openstack-dashboard/local_settings.py")
 
-def configure_simple_network():
+def install_and_configure_simple_network():
     execute("neutron net-create external -- --router:external=True")
     execute("neutron subnet-create external --name externalNet --gateway=192.168.1.1 --enable_dhcp=False 192.168.1.0/24")
     demo_tenant_id = execute("keystone tenant-list | grep ' admin ' | awk '{print $2;}'")
@@ -419,6 +419,21 @@ def configure_simple_network():
     int_subnet_id = execute("neutron subnet-list | grep -i internal | awk '{print $2;}'")
     execute("neutron router-interface-add %s %s" % (router_id, int_subnet_id))
 
+def install_and_configure_images():
+    #   download cirrosimage
+    execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
+    execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
+    # download centos image
+    execute("wget http://c250663.r63.cf1.rackcdn.com/centos60_x86_64.qcow2")
+    execute("glance image-create --name 'CentOS' --is-public True --file centos60_x86_64.qcow2 --disk-format qcow2 --container-format bare")
+    # download ubuntu image
+    execute("wget http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img")
+    execute("glance image-create --name 'Ubuntu' --is-public True --file precise-server-cloudimg-amd64-disk1.img --disk-format qcow2 --container-format bare")
+
+def make_api_user_available():
+#   make sure the api is setup properly for vagrant user
+    execute("cat /root/adminrc >> /home/vagrant/.bashrc")
+    execute("echo export no_proxy=127.0.0.1 >> /home/vagrant/.bashrc")    
 
 initialize_system()
 install_rabbitmq()
@@ -428,20 +443,9 @@ install_and_configure_glance()
 install_and_configure_nova()
 install_and_configure_neutron()
 install_and_configure_dashboard()
-configure_simple_network()
-
-#   make sure the api is setup properly for vagrant user
-execute("cat /root/adminrc >> /home/vagrant/.bashrc")
-execute("echo export no_proxy=127.0.0.1 >> /home/vagrant/.bashrc")
-#   download cirrosimage
-execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
-execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
-# download centos image
-#execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
-#execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
-# download ubuntu image
-#execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
-#execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
+install_and_configure_simple_network()
+install_and_configure_images()
+make_api_user_available()
 
 
 print_format(" Installation successfull! Login into horizon you crazy fool http://%s/horizon  Username:admin  Password:secret " % ip_address)
