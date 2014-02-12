@@ -413,7 +413,6 @@ install_and_configure_dashboard()
 #   make sure the root is setup properly
     execute("cat /root/adminrc >> /home/vagrant/.bashrc")
     execute("echo export no_proxy=127.0.0.1 >> /home/vagrant/.bashrc")
-    execute("source /root/adminrc")
 #   download cirrosimage
     execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
     execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --containter-format bare")
