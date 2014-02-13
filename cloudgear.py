@@ -116,8 +116,10 @@ def initialize_system():
     execute("apt-get install ubuntu-cloud-keyring python-setuptools python-iniparse python-psutil -y", True)
     delete_file("/etc/apt/sources.list.d/havana.list")
     execute("echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/havana main >> /etc/apt/sources.list.d/havana.list")
+    time.sleep(10)
     execute("apt-get update -y", True)
     #doing this twice.. (stupid proxy)....
+    time.sleep(10)
     execute("apt-get update -y", True)
 
     global iniparse
