@@ -117,6 +117,8 @@ def initialize_system():
     delete_file("/etc/apt/sources.list.d/havana.list")
     execute("echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/havana main >> /etc/apt/sources.list.d/havana.list")
     execute("apt-get update -y", True)
+    #doing this twice.. (stupid proxy)....
+    execute("apt-get update -y", True)
 
     global iniparse
     if iniparse is None:
