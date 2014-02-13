@@ -221,12 +221,6 @@ def _create_keystone_users():
     os.system("export OS_TENANT_NAME=admin")
     os.system("export OS_AUTH_URL=http://127.0.0.1:5000/v2.0")
    
-    #Put the same variables in the existing environment so that we can work in other functions below.
-#    os.environ['OS_USERNAME'] = "admin"
-#    os.environ['OS_PASSSWORD'] = "secret"
-#    os.environ['OS_TENANT_NAME'] ="admin"
-#    os.environ['OS_AUTH_URL'] = "http://127.0.0.1:5000/v2.0"
-#    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
 
 def install_and_configure_keystone():
     keystone_conf = "/etc/keystone/keystone.conf"
@@ -452,7 +446,12 @@ def install_and_configure_images():
 def make_api_user_available():
 #   make sure the api is setup properly for vagrant user
     execute("cat /root/adminrc >> /home/vagrant/.bashrc")
-    execute("echo export no_proxy=127.0.0.1 >> /home/vagrant/.bashrc")    
+    execute("echo export no_proxy=127.0.0.1 >> /home/vagrant/.bashrc")
+    os.environ['OS_USERNAME'] = "admin"
+    os.environ['OS_PASSSWORD'] = "secret"
+    os.environ['OS_TENANT_NAME'] ="admin"
+    os.environ['OS_AUTH_URL'] = "http://127.0.0.1:5000/v2.0"
+    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
 
 initialize_system()
 install_rabbitmq()
