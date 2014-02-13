@@ -215,12 +215,7 @@ def _create_keystone_users():
     write_to_file(rootsbashrc, "export OS_TENANT_NAME=admin\n")
     write_to_file(rootsbashrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
    
-    # Let root have em
-    os.system("export OS_USERNAME=admin")
-    os.system("export OS_PASSWORD=secret")
-    os.system("export OS_TENANT_NAME=admin")
-    os.system("export OS_AUTH_URL=http://127.0.0.1:5000/v2.0")
-   
+    let_me_work()
 
 def install_and_configure_keystone():
     keystone_conf = "/etc/keystone/keystone.conf"
@@ -420,6 +415,7 @@ def install_and_configure_dashboard():
     execute("sed -i 's/Member/_member_/g' /etc/openstack-dashboard/local_settings.py")
 
 def install_and_configure_simple_network():
+    let_me_work()
     execute("neutron net-create external -- --router:external=True")
     execute("neutron subnet-create external --name externalNet --gateway=192.168.1.1 --enable_dhcp=False 192.168.1.0/24")
     demo_tenant_id = execute("keystone tenant-list | grep ' admin ' | awk '{print $2;}'")
@@ -434,6 +430,7 @@ def install_and_configure_simple_network():
 
 def install_and_configure_images():
     #   download cirrosimage
+    let_me_work()
     execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
     execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
     # download centos image
@@ -447,11 +444,13 @@ def make_api_user_available():
 #   make sure the api is setup properly for vagrant user
     execute("cat /root/adminrc >> /home/vagrant/.bashrc")
     execute("echo export no_proxy=127.0.0.1 >> /home/vagrant/.bashrc")
-    os.environ['OS_USERNAME'] = "admin"
-    os.environ['OS_PASSSWORD'] = "secret"
-    os.environ['OS_TENANT_NAME'] ="admin"
-    os.environ['OS_AUTH_URL'] = "http://127.0.0.1:5000/v2.0"
-    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
+
+def let_me_work():
+        # Let root have em
+    os.system("export OS_USERNAME=admin")
+    os.system("export OS_PASSWORD=secret")
+    os.system("export OS_TENANT_NAME=admin")
+    os.system("export OS_AUTH_URL=http://127.0.0.1:5000/v2.0")
 
 initialize_system()
 install_rabbitmq()
@@ -464,7 +463,7 @@ install_and_configure_dashboard()
 make_api_user_available()
 install_and_configure_simple_network()
 install_and_configure_images()
-make_api_user_available()
+
 
 
 print_format(" Installation successful! Login into horizon you crazy fool http://%s/horizon  Username:admin  Password:secret " % ip_address)
