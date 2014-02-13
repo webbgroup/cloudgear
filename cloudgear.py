@@ -206,8 +206,13 @@ def _create_keystone_users():
     write_to_file(adminrc, "export OS_PASSWORD=secret\n")
     write_to_file(adminrc, "export OS_TENANT_NAME=admin\n")
     write_to_file(adminrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
-
-
+   
+    #Put the same variables in the existing environment so that we can work in other functions below.
+    os.environ['OS_USERNAME'] = "admin"
+    os.environ['OS_PASSSWORD'] = "secret"
+    os.environ['OS_TENANT_NAME'] ="admin"
+    os.environ['OS_AUTH_URL'] = "http://127.0.0.1:5000/v2.0"
+    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
 
 def install_and_configure_keystone():
     keystone_conf = "/etc/keystone/keystone.conf"
@@ -407,8 +412,6 @@ def install_and_configure_dashboard():
     execute("sed -i 's/Member/_member_/g' /etc/openstack-dashboard/local_settings.py")
 
 def install_and_configure_simple_network():
-    execute("source /root/adminrc")
-    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
     execute("neutron net-create external -- --router:external=True")
     execute("neutron subnet-create external --name externalNet --gateway=192.168.1.1 --enable_dhcp=False 192.168.1.0/24")
     demo_tenant_id = execute("keystone tenant-list | grep ' admin ' | awk '{print $2;}'")
@@ -423,8 +426,6 @@ def install_and_configure_simple_network():
 
 def install_and_configure_images():
     #   download cirrosimage
-    os.system("source /root/adminrc")
-    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
     execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
     execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
     # download centos image
@@ -447,9 +448,10 @@ install_and_configure_glance()
 install_and_configure_nova()
 install_and_configure_neutron()
 install_and_configure_dashboard()
+make_api_user_available()
 install_and_configure_simple_network()
 install_and_configure_images()
 make_api_user_available()
 
 
-print_format(" Installation successfull! Login into horizon you crazy fool http://%s/horizon  Username:admin  Password:secret " % ip_address)
+print_format(" Installation successful! Login into horizon you crazy fool http://%s/horizon  Username:admin  Password:secret " % ip_address)
