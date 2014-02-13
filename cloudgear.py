@@ -209,6 +209,12 @@ def _create_keystone_users():
     write_to_file(adminrc, "export OS_TENANT_NAME=admin\n")
     write_to_file(adminrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
    
+    rootsbashrc="/root/.bashrc"
+    write_to_file(rootsbashrc, "export OS_USERNAME=admin\n")
+    write_to_file(rootsbashrc, "export OS_PASSWORD=secret\n")
+    write_to_file(rootsbashrc, "export OS_TENANT_NAME=admin\n")
+    write_to_file(rootsbashrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
+   
     # Let root have em
     os.system("export OS_USERNAME=admin")
     os.system("export OS_PASSWORD=secret")
@@ -216,11 +222,11 @@ def _create_keystone_users():
     os.system("export OS_AUTH_URL=http://127.0.0.1:5000/v2.0")
    
     #Put the same variables in the existing environment so that we can work in other functions below.
-    os.environ['OS_USERNAME'] = "admin"
-    os.environ['OS_PASSSWORD'] = "secret"
-    os.environ['OS_TENANT_NAME'] ="admin"
-    os.environ['OS_AUTH_URL'] = "http://127.0.0.1:5000/v2.0"
-    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
+#    os.environ['OS_USERNAME'] = "admin"
+#    os.environ['OS_PASSSWORD'] = "secret"
+#    os.environ['OS_TENANT_NAME'] ="admin"
+#    os.environ['OS_AUTH_URL'] = "http://127.0.0.1:5000/v2.0"
+#    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
 
 def install_and_configure_keystone():
     keystone_conf = "/etc/keystone/keystone.conf"
