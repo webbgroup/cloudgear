@@ -447,10 +447,10 @@ def make_api_user_available():
 
 def let_me_work():
         # Let root have em
-    os.system("export OS_USERNAME=admin")
-    os.system("export OS_PASSWORD=secret")
-    os.system("export OS_TENANT_NAME=admin")
-    os.system("export OS_AUTH_URL=http://127.0.0.1:5000/v2.0")
+    execute("export OS_USERNAME=admin", True)
+    execute("export OS_PASSWORD=secret", True)
+    execute("export OS_TENANT_NAME=admin", True)
+    execute("export OS_AUTH_URL=http://127.0.0.1:5000/v2.0", True)
 
 initialize_system()
 install_rabbitmq()
