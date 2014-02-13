@@ -407,6 +407,8 @@ def install_and_configure_dashboard():
     execute("sed -i 's/Member/_member_/g' /etc/openstack-dashboard/local_settings.py")
 
 def install_and_configure_simple_network():
+    execute("source /root/adminrc")
+    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
     execute("neutron net-create external -- --router:external=True")
     execute("neutron subnet-create external --name externalNet --gateway=192.168.1.1 --enable_dhcp=False 192.168.1.0/24")
     demo_tenant_id = execute("keystone tenant-list | grep ' admin ' | awk '{print $2;}'")
@@ -421,6 +423,8 @@ def install_and_configure_simple_network():
 
 def install_and_configure_images():
     #   download cirrosimage
+    execute("source /root/adminrc")
+    os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
     execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
     execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
     # download centos image
