@@ -423,7 +423,7 @@ def install_and_configure_simple_network():
 
 def install_and_configure_images():
     #   download cirrosimage
-    execute("source /root/adminrc")
+    os.system("source /root/adminrc")
     os.environ['no_proxy'] = "localhost,127.0.0.1,%s" % ip_address
     execute("wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img")
     execute("glance image-create --name 'Cirros' --is-public True --file cirros-0.3.0-x86_64-disk.img --disk-format qcow2 --container-format bare")
