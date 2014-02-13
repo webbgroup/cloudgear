@@ -209,6 +209,12 @@ def _create_keystone_users():
     write_to_file(adminrc, "export OS_TENANT_NAME=admin\n")
     write_to_file(adminrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
    
+    # Let root have em
+    os.system("export OS_USERNAME=admin")
+    os.system("export OS_PASSWORD=secret")
+    os.system("export OS_TENANT_NAME=admin")
+    os.system("export OS_AUTH_URL=http://127.0.0.1:5000/v2.0")
+   
     #Put the same variables in the existing environment so that we can work in other functions below.
     os.environ['OS_USERNAME'] = "admin"
     os.environ['OS_PASSSWORD'] = "secret"
