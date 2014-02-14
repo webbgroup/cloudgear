@@ -215,6 +215,12 @@ def _create_keystone_users():
     write_to_file(rootsbashrc, "export OS_TENANT_NAME=admin\n")
     write_to_file(rootsbashrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
    
+    vagrantssbashrc="/home/vagrant.bashrc"
+    write_to_file(rootsbashrc, "export OS_USERNAME=admin\n")
+    write_to_file(rootsbashrc, "export OS_PASSWORD=secret\n")
+    write_to_file(rootsbashrc, "export OS_TENANT_NAME=admin\n")
+    write_to_file(rootsbashrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
+   
     let_me_work()
 
 def install_and_configure_keystone():
