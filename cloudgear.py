@@ -143,7 +143,7 @@ def initialize_system():
     write_to_file(rootsbashrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
     write_to_file(rootsbashrc, "export no_proxy=127.0.0.1")
        
-    vagrantsbashrc="/home/vagrant.bashrc"
+    vagrantsbashrc="/home/vagrant/.bashrc"
     write_to_file(vagrantsbashrc, "export OS_USERNAME=admin\n")
     write_to_file(vagrantsbashrc, "export OS_PASSWORD=secret\n")
     write_to_file(vagrantsbashrc, "export OS_TENANT_NAME=admin\n")
