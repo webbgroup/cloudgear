@@ -149,6 +149,12 @@ def initialize_system():
     write_to_file(vagrantsbashrc, "export OS_TENANT_NAME=admin\n")
     write_to_file(vagrantsbashrc, "export OS_AUTH_URL=http://127.0.0.1:5000/v2.0\n")
     write_to_file(vagrantsbashrc, "export no_proxy=127.0.0.1")
+    
+    os.environ['OS_USERNAME']='admin'
+    os.environ['OS_PASSWORD']='secret'
+    os.environ['OS_TENANT_NAME']='admin'
+    os.environ['OS_AUTH_URL']='http://127.0.0.1:5000/v2.0'
+    os.environ['no_proxy']='127.0.0.1'
 #=================================================================================
 #==================   Components Installation Starts Here ========================
 #=================================================================================
